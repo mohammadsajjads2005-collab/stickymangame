@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+
+  <meta name="theme-color" content="#111111" />
+
+  <title>Stick Clash: Duo Battle</title>
+
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+
+  <!-- ==========================================
+       GAME CANVAS
+       ========================================== -->
+
+  <canvas id="game-canvas"></canvas>
+
+  <div id="fx-flash"></div>
+
+
+  <!-- ==========================================
+       ROTATE PHONE OVERLAY
+       ========================================== -->
+
+  <div id="rotate-overlay" class="rotate-overlay hidden" aria-hidden="true">
+    <div class="rotate-card">
+
+      <div class="rotate-icon">
+        📱
+      </div>
+
+      <h2>
+        ROTATE YOUR PHONE
+      </h2>
+
+      <p>
+        Turn your phone sideways
+      </p>
+
+      <span>
+        Play Stick Clash in landscape mode
+      </span>
+
+    </div>
+  </div>
+
+
+  <!-- ==========================================
+       MAIN MENU
+       ========================================== -->
+
+  <section id="screen-menu" class="screen active">
+
+    <div class="menu-panel">
+
+      <h1 class="logo">
+        STICK CLASH
+        <span>DUO BATTLE</span>
+      </h1>
+
+      <label class="field">
+
+        <span>
+          Your name
+        </span>
+
+        <input id="input-name" maxlength="16" placeholder="Stickman" autocomplete="off" autocapitalize="words"
+          spellcheck="false" />
+
+      </label>
+
+      <div class="menu-actions">
+
+        <button id="btn-create" class="btn btn-primary" type="button">
+          CREATE ROOM
+        </button>
+
+        <button id="btn-bot" class="btn btn-bot" type="button">
+          PLAY WITH BOT
+        </button>
+
+        <button id="btn-join-open" class="btn" type="button">
+          JOIN ROOM
+        </button>
+
+        <button id="btn-howto" class="btn btn-ghost" type="button">
+          HOW TO PLAY
+        </button>
+
+      </div>
+
+
+      <!-- JOIN ROOM -->
+
+      <div id="join-panel" class="join-panel hidden">
+
+        <input id="input-roomid" maxlength="5" placeholder="ROOM ID" autocomplete="off" autocapitalize="characters"
+          spellcheck="false" />
+
+        <button id="btn-join" class="btn btn-primary" type="button">
+          JOIN
+        </button>
+
+      </div>
+
+      <p id="menu-error" class="error-text"></p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       HOW TO PLAY
+       ========================================== -->
+
+  <section id="screen-howto" class="screen">
+
+    <div class="menu-panel">
+
+      <h2 class="panel-title">
+        HOW TO PLAY
+      </h2>
+
+      <div class="howto-grid">
+
+        <div>
+          <b>Move</b>
+          <span>A/D or ←/→</span>
+        </div>
+
+        <div>
+          <b>Jump</b>
+          <span>W / ↑ / Space</span>
+        </div>
+
+        <div>
+          <b>Crouch</b>
+          <span>S / ↓</span>
+        </div>
+
+        <div>
+          <b>Punch</b>
+          <span>J</span>
+        </div>
+
+        <div>
+          <b>Kick</b>
+          <span>K</span>
+        </div>
+
+        <div>
+          <b>Heavy</b>
+          <span>L</span>
+        </div>
+
+        <div>
+          <b>Sword</b>
+          <span>U</span>
+        </div>
+
+        <div>
+          <b>Block</b>
+          <span>Shift</span>
+        </div>
+
+        <div>
+          <b>Dash</b>
+          <span>E</span>
+        </div>
+
+        <div>
+          <b>Roll</b>
+          <span>Q</span>
+        </div>
+
+      </div>
+
+      <p class="howto-note">
+        Best of 3 rounds. Both fighters start each round
+        with 100 HP. Use movement, attacks, blocking and
+        dodging to defeat your opponent. First to win
+        2 rounds takes the match.
+      </p>
+
+      <button id="btn-howto-back" class="btn" type="button">
+        BACK
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       LOBBY
+       ========================================== -->
+
+  <section id="screen-lobby" class="screen">
+
+    <div class="menu-panel lobby-panel">
+
+      <div class="lobby-header">
+
+        <div>
+
+          <span class="lobby-label">
+            ROOM ID
+          </span>
+
+          <h2 id="lobby-roomid" class="lobby-roomid">
+            -----
+          </h2>
+
+        </div>
+
+        <button id="btn-copy" class="btn btn-small" type="button">
+          COPY
+        </button>
+
+      </div>
+
+
+      <div class="lobby-meta">
+
+        <span id="lobby-map">
+          Map: Shadow Ground
+        </span>
+
+        <span id="lobby-mode">
+          Mode: 1V1 Fight
+        </span>
+
+      </div>
+
+
+      <ul id="lobby-players" class="lobby-players"></ul>
+
+
+      <div class="lobby-actions">
+
+        <button id="btn-ready" class="btn" type="button">
+          READY
+        </button>
+
+        <button id="btn-start" class="btn btn-primary hidden" type="button">
+          START MATCH
+        </button>
+
+      </div>
+
+
+      <p id="lobby-hint" class="lobby-hint">
+        Waiting for host to start…
+      </p>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       COUNTDOWN
+       ========================================== -->
+
+  <div id="countdown-overlay" class="hidden" aria-hidden="true">
+
+    <span id="countdown-num">
+      3
+    </span>
+
+  </div>
+
+
+  <!-- ==========================================
+       ROUND END
+       ========================================== -->
+
+  <div id="round-banner" class="hidden">
+
+    <span id="round-banner-ko">
+      K.O.
+    </span>
+
+    <span id="round-banner-winner">
+      PLAYER 1 WINS ROUND
+    </span>
+
+    <span id="round-banner-score"></span>
+
+  </div>
+
+
+  <!-- ==========================================
+       DEBUG
+       ========================================== -->
+
+  <div id="debug-overlay" class="hidden"></div>
+
+
+  <!-- ==========================================
+       HUD
+       ========================================== -->
+
+  <section id="hud" class="hidden">
+
+    <div id="hud-bars"></div>
+
+    <div class="hud-center">
+
+      <span id="hud-timer">
+        2:00
+      </span>
+
+      <span id="hud-map"></span>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       MOBILE TOUCH CONTROLS
+       ========================================== -->
+
+  <div id="touch-controls" class="hidden" aria-label="Mobile fighting controls">
+
+    <!-- ========================================
+         LEFT THUMB JOYSTICK
+         ======================================== -->
+
+    <div id="virtual-joystick" class="virtual-joystick" aria-label="Movement joystick">
+
+      <div class="joystick-base">
+
+        <div id="joystick-knob" class="joystick-knob"></div>
+
+      </div>
+
+      <span class="joystick-hint">
+        MOVE
+      </span>
+
+    </div>
+
+
+    <!-- ========================================
+         RIGHT THUMB COMBAT CONTROLS
+         ONLY 5 BUTTONS
+         ======================================== -->
+
+    <div class="mobile-actions" aria-label="Combat controls">
+
+      <!-- Punch -->
+
+      <button id="t-punch" class="tbtn tbtn-action tbtn-punch" type="button" aria-label="Punch">
+        <span class="tbtn-icon">👊</span>
+        <span class="tbtn-label">PUNCH</span>
+      </button>
+
+
+      <!-- Kick -->
+
+      <button id="t-kick" class="tbtn tbtn-action tbtn-kick" type="button" aria-label="Kick">
+        <span class="tbtn-icon">🦵</span>
+        <span class="tbtn-label">KICK</span>
+      </button>
+
+
+      <!-- Sword -->
+
+      <button id="t-sword" class="tbtn tbtn-sword" type="button" aria-label="Sword attack">
+        <span class="tbtn-icon">⚔</span>
+        <span class="tbtn-label">SWORD</span>
+      </button>
+
+
+      <!-- Block -->
+
+      <button id="t-block" class="tbtn tbtn-block" type="button" aria-label="Block">
+        <span class="tbtn-icon">🛡</span>
+        <span class="tbtn-label">BLOCK</span>
+      </button>
+
+
+      <!-- Dash / Roll -->
+
+      <button id="t-dash" class="tbtn tbtn-dash" type="button" aria-label="Dash or roll">
+        <span class="tbtn-icon">➜</span>
+        <span class="tbtn-label">DASH</span>
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- ==========================================
+       END SCREEN
+       ========================================== -->
+
+  <section id="screen-end" class="screen">
+
+    <div class="menu-panel end-panel">
+
+      <h2 class="panel-title" id="end-title">
+        MATCH OVER
+      </h2>
+
+      <div id="end-rankings" class="end-rankings"></div>
+
+      <div class="menu-actions">
+
+        <button id="btn-rematch" class="btn btn-primary" type="button">
+          REMATCH
+        </button>
+
+        <button id="btn-lobby" class="btn" type="button">
+          RETURN TO LOBBY
+        </button>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ==========================================
+       GAME SCRIPTS
+       ========================================== -->
+
+  <script src="/shared/constants.js"></script>
+
+  <script src="/shared/maps.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+
+  <script src="/js/network.js"></script>
+
+  <script src="/js/input.js"></script>
+
+  <script src="/js/renderer.js"></script>
+
+  <script src="/js/ui.js"></script>
+
+  <script src="/js/main.js"></script>
+
+</body>
+
+</html>
